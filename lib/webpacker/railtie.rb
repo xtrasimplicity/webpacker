@@ -29,7 +29,9 @@ class Webpacker::Engine < ::Rails::Engine
   #     - edit config/environments/production.rb
   #     - add `config.webpacker.check_yarn_integrity = true`
   initializer "webpacker.yarn_check" do |app|
-    if File.exist?("yarn.lock") && Webpacker.config.config_path.exist? && Webpacker.config.check_yarn_integrity?
+    is_running_rails_command = File.basename($0) == 'rails'
+    
+    if File.exist?("yarn.lock") && Webpacker.config.config_path.exist? && Webpacker.config.check_yarn_integrity? && is_running_rails_command
       output = `yarn check --integrity && yarn check --verify-tree 2>&1`
 
       unless $?.success?
